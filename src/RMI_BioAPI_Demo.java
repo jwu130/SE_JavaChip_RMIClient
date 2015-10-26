@@ -1,4 +1,4 @@
-package RMI_Client;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,11 +90,17 @@ public class RMI_BioAPI_Demo {
 		
 		try {
 			outStream = new PrintWriter( new FileOutputStream(local_fileName) );
-			
+			System.out.println("Local file found: " + outStream.toString());
+			File f = new File("txtClient");
+			if(f.exists() && !f.isDirectory()) System.out.println("txtClient found " + f.getAbsolutePath());
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			System.out.println(e1);
+			e1.printStackTrace();
 			System.out.println("Failed to open file to write to. File name was: " + local_fileName);
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		try {
@@ -130,26 +136,26 @@ public class RMI_BioAPI_Demo {
 		}
 	}
 
-	public RMI_BioAPI_Demo(String local_fileName, int socket_port, String AsteriskJava_IP, String Service_UID,
+	public RMI_BioAPI_Demo(String local_fileName, int client_socket_port, String AsteriskJava_IP, String Service_UID,
 			String remote_AsteriskSrcFilename) throws RemoteException {
-		new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip, socket_port, local_fileName);
+		new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip, client_socket_port, local_fileName);
 		new RequestThread("AsteriskJava", AsteriskJava_IP, Service_UID, remote_AsteriskSrcFilename, socket_listener_ip,
-				socket_port, local_fileName);
-		System.out.println("Local name: " + local_fileName + "remote: " + remote_AsteriskSrcFilename);
+				client_socket_port, local_fileName);
+		System.out.println("Local name: " + local_fileName + " remote: " + remote_AsteriskSrcFilename);
 	}
 
-	public static void main(String[] args) throws Exception {
-		if (args.length != 5) {
-			System.out.println(
-					"Syntax - java RMI_BioAPI_Demo <local_Filename> <host_port> <Remote_AsteriskJava_IP> <service_UID> <remote_source_Filename>");
-			System.exit(1);
-		}
-
-		// Create an instance of our service server ...
-		System.out.println("This is the arg[0]: " + args[0]);
-		RMI_BioAPI_Demo demo_instance = new RMI_BioAPI_Demo(args[0], Integer.parseInt(args[1]), args[2], args[3],
-				args[4]);
-
-	}
+//	public static void main(String[] args) throws Exception {
+//		if (args.length != 5) {
+//			System.out.println(
+//					"Syntax - java RMI_BioAPI_Demo <local_Filename> <host_port> <Remote_AsteriskJava_IP> <service_UID> <remote_source_Filename>");
+//			System.exit(1);
+//		}
+//
+//		// Create an instance of our service server ...
+//		System.out.println("This is the arg[0]: " + args[0]);
+//		RMI_BioAPI_Demo demo_instance = new RMI_BioAPI_Demo(args[0], Integer.parseInt(args[1]), args[2], args[3],
+//				args[4]);
+//
+//	}
 
 }
