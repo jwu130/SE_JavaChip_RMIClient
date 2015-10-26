@@ -21,7 +21,7 @@ Set Up:
     
     Client:
         create dynamic web project on eclipse and import src from: https://github.com/jwu130/SE_JavaChip_RMIClient
-        create a tomcat server on eclipse and add your project
+        create a tomcat server on eclipse and add your project to the server
         open server configuration files (may be found in navigator view on eclipse - Servers)
         open catalina.policy
         add: 
@@ -47,9 +47,9 @@ Start:
     open cmd prompt
     navigate to your java development kit installation directory bin folder ie. ..\jre1.8.0_45\bin
     set classpath on machine to server side project class files with command set classpath=<...>
-    execute command start rmiregistry 1099
+    //execute command start rmiregistry 1099
     
-    run RMI_BioAPI_AsteriskJava_Server with "start java RMI_BioAPI_AsteriskJava_Server 1099 <your_server_port_number>"
+    run RMI_BioAPI_AsteriskJava_Server with "start java RMI_BioAPI_AsteriskJava_Server <your_rmi_registry_port> <your_server_port_number>"
     
     open your eclipse
     change the virtual machine arguments in run configurations of tomcat server to include " -Djava.security.manager -Djava.security.policy="<path_to_your_catalina_policy_file>"
