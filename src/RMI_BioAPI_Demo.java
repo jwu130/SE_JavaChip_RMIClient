@@ -90,7 +90,7 @@ public class RMI_BioAPI_Demo {
 		
 		try {
 			outStream = new PrintWriter( new FileOutputStream(local_fileName) );
-			System.out.println("Local file found: " + outStream.toString());
+			System.out.println("Local file found in this location: " + outStream.toString());
 			File f = new File("txtClient");
 			if(f.exists() && !f.isDirectory()) System.out.println("txtClient found " + f.getAbsolutePath());
 		} catch (FileNotFoundException e1) {
