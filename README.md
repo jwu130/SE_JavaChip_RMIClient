@@ -22,7 +22,7 @@ Set Up:
         <!--create dynamic web project on eclipse and import src files from: https://github.com/jwu130/SE_JavaChip_RMIClient-->
         <!--create a tomcat server on eclipse and add your project to the server-->
         
-        Create tomcat server and deploy client application  (src files from https://github.com/jwu130/SE_JavaChip_RMIClient              packaged as war)
+        Create tomcat server and deploy client application  (src files from https://github.com/jwu130/SE_JavaChip_RMIClient packaged as war)
         
         Edit your security policy:
         open catalina.policy
