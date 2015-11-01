@@ -38,7 +38,7 @@ Start:
     run RMI_BioAPI_AsteriskJava_Server with "java -Djava.security.manager -Djava.security.policy=<\path\to\your\policy\file>         -jar RMI_BioAPI_AsteriskJava_Server <your_rmi_registry_port> <your_server_port_number>"
     
     open your eclipse
-    change the virtual machine arguments in run configurations of tomcat server to include " -Djava.security.manager -Djava.security.policy="<path_to_your_catalina_policy_file>"
+    deploy war file to the server
     run tomcat server
 
 Check to see if its working:
