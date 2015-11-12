@@ -10,8 +10,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
 
 public class RMI_BioAPI_Demo {
+
+	public LinkedList<String> availableFiles = new LinkedList<String>();
 
 	// The client ip address that the socket listener listens at
 	private String socket_listener_ip;
@@ -23,7 +26,7 @@ public class RMI_BioAPI_Demo {
 		// The ip address of the rmi server
 		private String AsteriskJava_IP;
 		// Useless, need to get rid of
-		private String Service_UID;
+		private String serviceName;
 		// Name of remote file on server side
 		private String remote_AsteriskSrcFilename;
 		// The client ip address that the socket listener listens at (variable
@@ -34,12 +37,12 @@ public class RMI_BioAPI_Demo {
 		// Name of local file (file will create one if not available)
 		private String local_fileName;
 
-		RequestThread(final String option, final String AsteriskJava_IP, final String Service_UID,
+		RequestThread(final String option, final String AsteriskJava_IP, final String serviceName,
 				final String remote_AsteriskSrcFilename, final String socket_listener_ip, final int socket_port,
 				final String local_fileName) {
 			this.option = option;
 			this.AsteriskJava_IP = AsteriskJava_IP;
-			this.Service_UID = Service_UID;
+			this.serviceName = serviceName;
 			this.remote_AsteriskSrcFilename = remote_AsteriskSrcFilename;
 			this.socket_listener_ip = socket_listener_ip;
 			this.socket_port = socket_port;
@@ -58,7 +61,7 @@ public class RMI_BioAPI_Demo {
 			}
 			// If AsteriskJava, create new client instance
 			if (option.equals("AsteriskJava")) {
-				new RMI_BioAPI_AsteriskJava_Client(AsteriskJava_IP, Service_UID, remote_AsteriskSrcFilename,
+				new RMI_BioAPI_AsteriskJava_Client(AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename,
 						socket_listener_ip, socket_port, local_fileName);
 			}
 			// Runs the above operations simultaneously as multi-threads
@@ -97,7 +100,7 @@ public class RMI_BioAPI_Demo {
 			// Create socket and enable listening using serverSocket
 			socket = serverSocket.accept();
 			System.out.println("Server socket (Client) is ready to recieve response from server");
-			
+
 			// Init reader and writer
 			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			pw = new PrintWriter(socket.getOutputStream(), true);
@@ -107,34 +110,55 @@ public class RMI_BioAPI_Demo {
 	}
 
 	public void socket_listener(String local_fileName) {
-		System.out.println("Recieving data from server: ");
 		String inputln;
 		PrintWriter outStream = null;
 
 		// Find/create file and create printwriter
 		try {
-			outStream = new PrintWriter(new FileOutputStream(local_fileName));
-			System.out.println("Local file found in this location: " + outStream.toString());
-			
-			// For displaying where the file ended up
-			// Need to designate a location to find the client files ?
-			File f = new File("txtClient");
-			System.out.println("txtClient found " + f.getAbsolutePath());
-			
-		} catch (FileNotFoundException e1) {
-			System.out.println("Failed to open file to write to. File name was: " + local_fileName);
-			e1.printStackTrace();
+			File directory = new File("rmiclientfiles");
+			File clientFile = null;
+
+			System.out.println("File is found in: " + System.getProperty("user.dir"));
+			System.out.println("Recieving data from server: ");
+
+			// Look for subfolder called 'rmiclientfiles'
+			if (!directory.isDirectory())
+				throw new Exception("The directory rmiclientfiles does not exist");
+			File[] fList = directory.listFiles();
+
+			// Search through folder for file specified
+			for (File file : fList) {
+				if (file.getName().equals(local_fileName))
+					clientFile = file;
+			}
+
+			outStream = new PrintWriter(new FileOutputStream(clientFile));
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 
+		long start = System.currentTimeMillis();
+		long end = start + 60 * 1000; // 60 seconds * 1000 ms/sec
+
+		boolean finished = false;
 		try {
-			while ((inputln = br.readLine()) != "Done" && inputln != null) {
-				System.out.println(inputln);
-				
-				// Write lines received to local file
-				outStream.println(inputln);
+			while (System.currentTimeMillis() < end && !finished) {
+
+				while (true) {
+					if ((inputln = br.readLine()).equals("Xfer Start")) {
+						while (!((inputln = br.readLine()).equals("Done")) && inputln != null) {
+							inputln = inputln.trim();
+							outStream.println(inputln);
+							System.out.println(inputln);
+							availableFiles.add(inputln);
+						}
+
+						finished = true;
+						break;
+					}
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -155,20 +179,21 @@ public class RMI_BioAPI_Demo {
 	}
 
 	/** RMI_BioAPI_Demo constructor **/
-	public RMI_BioAPI_Demo(String local_fileName, int client_socket_port, String AsteriskJava_IP, String Service_UID,
+	public RMI_BioAPI_Demo(String local_fileName, int client_socket_port, String AsteriskJava_IP, String serviceName,
 			String remote_AsteriskSrcFilename) throws RemoteException {
-		
+
 		// Get system ip address
 		try {
 			socket_listener_ip = InetAddress.getLocalHost().getHostAddress();
-			System.out.println(socket_listener_ip);
+			System.out.println("Socket listener ip is: " + socket_listener_ip);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 
-		// Create new threads, socket, and RMI_BioAPI_Asterisk_Client ( looks up remote object and invokes method on rm)
+		// Create new threads, socket, and RMI_BioAPI_Asterisk_Client ( looks up
+		// remote object and invokes method on rm)
 		new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip, client_socket_port, local_fileName);
-		new RequestThread("AsteriskJava", AsteriskJava_IP, Service_UID, remote_AsteriskSrcFilename, socket_listener_ip,
+		new RequestThread("AsteriskJava", AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename, socket_listener_ip,
 				client_socket_port, local_fileName);
 
 		System.out.println("RMI_BioAPI_Demo instance is created. Local file name: " + local_fileName

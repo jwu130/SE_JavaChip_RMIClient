@@ -1,0 +1,13 @@
+grant {
+    permission java.security.AllPermission;
+};
+grant codeBase "file:${catalina.home}/wtpwebapps/Assignment3Servlet/WEB-INF/classes/-" { 
+    permission java.security.AllPermission "", ""; 
+}; 
+ 
+grant codeBase "file:${catalina.home}/wtpwebapps/Assignment3Servlet/WEB-INF/lib/-" { 
+    permission java.security.AllPermission "", ""; 
+}; 
+grant codeBase "file:${catalina.home}/wtpwebapps/Assignment3Servlet/WEB-INF/lib/some-common-3.0.jar" { 
+    permission java.io.FilePermission "*", "read, write"; 
+};
