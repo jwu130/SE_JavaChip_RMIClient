@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
-public class RMI_BioAPI_Demo {
+public class RMI_Main {
 
 	public LinkedList<String> availableFiles = new LinkedList<String>();
 
@@ -61,7 +61,7 @@ public class RMI_BioAPI_Demo {
 			}
 			// If AsteriskJava, create new client instance
 			if (option.equals("AsteriskJava")) {
-				new RMI_BioAPI_AsteriskJava_Client(AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename,
+				new RMI_client(AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename,
 						socket_listener_ip, socket_port, local_fileName);
 			}
 			// Runs the above operations simultaneously as multi-threads
@@ -179,7 +179,7 @@ public class RMI_BioAPI_Demo {
 	}
 
 	/** RMI_BioAPI_Demo constructor **/
-	public RMI_BioAPI_Demo(String local_fileName, int client_socket_port, String AsteriskJava_IP, String serviceName,
+	public RMI_Main(String local_fileName, int client_socket_port, String rmiServer_ip, String serviceName,
 			String remote_AsteriskSrcFilename) throws RemoteException {
 
 		// Get system ip address
@@ -193,7 +193,7 @@ public class RMI_BioAPI_Demo {
 		// Create new threads, socket, and RMI_BioAPI_Asterisk_Client ( looks up
 		// remote object and invokes method on rm)
 		new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip, client_socket_port, local_fileName);
-		new RequestThread("AsteriskJava", AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename, socket_listener_ip,
+		new RequestThread("AsteriskJava", rmiServer_ip, serviceName, remote_AsteriskSrcFilename, socket_listener_ip,
 				client_socket_port, local_fileName);
 
 		System.out.println("RMI_BioAPI_Demo instance is created. Local file name: " + local_fileName

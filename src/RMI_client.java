@@ -1,12 +1,12 @@
 import java.rmi.Naming;
 
-public class RMI_BioAPI_AsteriskJava_Client {
+public class RMI_client {
 
-	public RMI_BioAPI_AsteriskJava_Client(String host_ip, String serviceName, String srcFileName, String socket_ip,
+	public RMI_client(String host_ip, String serviceName, String srcFileName, String socket_ip,
 			int socket_port, String remote_fileName) {
 
 		try {
-			RMI_BioAPI_AsteriskJava_Interface service = (RMI_BioAPI_AsteriskJava_Interface) Naming
+			RMI_Interface service = (RMI_Interface) Naming
 					.lookup("rmi://" + host_ip + "/RMI_BioAPI_AsteriskJava");
 			System.out.println("Naming lookup succeeded");
 			if (serviceName == "RPC_FileRead")
