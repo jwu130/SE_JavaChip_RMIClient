@@ -13,33 +13,13 @@ Requirements:
 
 Server repository: https://github.com/jwu130/SE_JavaChip_RMIServer
 
-Set Up:
-    
-    Server-Side:
-        
-    
-    Client-Side:
-        Create tomcat server and deploy client application  (src files from https://github.com/jwu130/SE_JavaChip_RMIClient)
-            The main servlet will take two parameters upon initialization:
-                1. The port that the RMI client is allowed to listen on
-                2. The IP address of the machine that the RMI Server is running on
-        <!--Edit your security policy:-->
-        <!--open catalina.policy-->
-        <!--add: -->
-        <!--    grant {-->
-        <!--        permission java.security.AllPermission;-->
-        <!--    };-->
-        
-        <!--open cmd prompt-->
-    
-<!--    run rmi server jar file-->
-<!--    run RMI_BioAPI_AsteriskJava_Server with "java -Djava.security.manager -Djava.security.policy=<\path\to\your\policy\file>         -jar RMI_BioAPI_AsteriskJava_Server <your_rmi_registry_port> <your_server_port_number>"-->
-    
-<!--    open your eclipse-->
-<!--    deploy war file to the server-->
-<!--    run tomcat server-->
+Server-Side:
+    Run with two arguments
+        1. Port for the RMI registry to listen on
+        2. Port for the RMI server to listen on
 
-<!--Check to see if its working:-->
-<!--    open browser-->
-<!--    go to localhost:<tomcat_portnumber>/<your_context_path_foundinserver.xml>/main-->
-<!--    You should see helloworld and in your system console, see the contents of txtServer displayed on console of server and tomcat-->
+Client-Side:
+    Create tomcat server and deploy client application  (src files from https://github.com/jwu130/SE_JavaChip_RMIClient)
+        The main servlet will take two parameters upon initialization:
+            1. The port that the RMI client is allowed to listen on
+            2. The IP address of the machine that the RMI server is running on
