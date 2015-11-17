@@ -1,3 +1,5 @@
+package com.javachip.rmi;
+
 import java.rmi.Naming;
 
 public class RMI_client {
