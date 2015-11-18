@@ -2,9 +2,9 @@ package com.javachip.rmi;
 
 import java.rmi.Naming;
 
-public class RMI_client {
+public class RMI_Client {
 
-	public RMI_client(String host_ip, String serviceName, String srcFileName, String socket_ip,
+	public RMI_Client(String host_ip, String serviceName, String srcFileName, String socket_ip,
 			int socket_port, String remote_fileName) {
 
 		try {

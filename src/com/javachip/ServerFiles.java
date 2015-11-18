@@ -25,16 +25,16 @@ public class ServerFiles extends HttpServlet {
 	// Name of file on client side to be written to
 	String local_fileName = "txtClient"; // Not needed
 	// Client side server socket port to be started on
-	int client_socket_port = servletEntryPoint.client_socket_port;
+	int client_socket_port = MainServlet.client_socket_port;
 	// IP address of the rmi server
-	String AsteriskJava_IP = servletEntryPoint.AsteriskJava_IP; 
+	String AsteriskJava_IP = MainServlet.AsteriskJava_IP; 
 	// Useless, need to get rid of
 	String serviceName = "retrieve_available_files";
 	// Name of file on server side to be read from
 	String remote_AsteriskSrcFilename = "txtServer";
 	
     public void init(ServletConfig config) {
-        System.out.println("My servlet has been initialized");
+        System.out.println("Serverfiles servlet has been initialized");
     }
 	
 	@Override
@@ -49,9 +49,9 @@ public class ServerFiles extends HttpServlet {
 		out.println("<h1> Hello. </h1>");
 	
 		// Client side server socket port to be started on
-		client_socket_port = servletEntryPoint.client_socket_port;
+		client_socket_port = MainServlet.client_socket_port;
 		// IP address of the rmi server
-		AsteriskJava_IP = servletEntryPoint.AsteriskJava_IP; 
+		AsteriskJava_IP = MainServlet.AsteriskJava_IP; 
 		
 		if (client_socket_port != 0 || AsteriskJava_IP != null) {
 			RMI_Main demo_instance = new RMI_Main(local_fileName, client_socket_port, AsteriskJava_IP, serviceName,

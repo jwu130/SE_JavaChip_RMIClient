@@ -16,6 +16,9 @@ import java.util.LinkedList;
 
 public class RMI_Main {
 
+	// To know when the transfer is completed
+	public boolean finished;
+	
 	public LinkedList<String> availableFiles = new LinkedList<String>();
 
 	// The client ip address that the socket listener listens at
@@ -63,8 +66,8 @@ public class RMI_Main {
 			}
 			// If AsteriskJava, create new client instance
 			if (option.equals("AsteriskJava")) {
-				new RMI_client(AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename,
-						socket_listener_ip, socket_port, local_fileName);
+				new RMI_Client(AsteriskJava_IP, serviceName, remote_AsteriskSrcFilename, socket_listener_ip,
+						socket_port, local_fileName);
 			}
 			// Runs the above operations simultaneously as multi-threads
 		}
@@ -120,7 +123,7 @@ public class RMI_Main {
 			File directory = new File("rmiclientfiles");
 			File clientFile = null;
 
-			System.out.println("File is found in: " + System.getProperty("user.dir"));
+			System.out.println("Folder is found in: " + System.getProperty("user.dir"));
 			System.out.println("Recieving data from server: ");
 
 			// Look for subfolder called 'rmiclientfiles'
@@ -129,11 +132,10 @@ public class RMI_Main {
 			File[] fList = directory.listFiles();
 
 			// Search through folder for file specified
-			for (File file : fList) {
-				if (file.getName().equals(local_fileName))
-					clientFile = file;
-			}
-
+			local_fileName = local_fileName.replace("\"","");
+			clientFile = new File(local_fileName);
+			System.out.println("File is found in: " + clientFile.getAbsolutePath());
+			
 			outStream = new PrintWriter(new FileOutputStream(clientFile));
 
 		} catch (Exception e) {
@@ -144,13 +146,13 @@ public class RMI_Main {
 		long start = System.currentTimeMillis();
 		long end = start + 60 * 1000; // 60 seconds * 1000 ms/sec
 
-		boolean finished = false;
+		finished = false;
 		try {
 			while (System.currentTimeMillis() < end && !finished) {
 
 				while (true) {
 					if ((inputln = br.readLine()).equals("Xfer Start")) {
-						while (!((inputln = br.readLine()).equals("Done")) && inputln != null) {
+						while (!((inputln = br.readLine()).equals("Done"))) {
 							inputln = inputln.trim();
 							outStream.println(inputln);
 							System.out.println(inputln);
@@ -178,6 +180,10 @@ public class RMI_Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean getFinished(){
+		return finished;
 	}
 
 	/** RMI_BioAPI_Demo constructor **/
