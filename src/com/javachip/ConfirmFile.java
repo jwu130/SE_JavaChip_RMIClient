@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.javachip.rmi.RMI_Main;
 
 @SuppressWarnings("serial")
+@WebServlet(urlPatterns = "/confirmFile/*", loadOnStartup = 1, asyncSupported = true)
+// .../confirmFile/?fileName="file"
 
 public class ConfirmFile extends HttpServlet {
 
@@ -26,7 +29,7 @@ public class ConfirmFile extends HttpServlet {
 	// Useless, need to get rid of
 	String serviceName = "retrieve_available_files";
 	// Name of file on server side to be read from
-	String remote_AsteriskSrcFilename = "txtServer";
+	String remote_AsteriskSrcFilename;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,8 +41,9 @@ public class ConfirmFile extends HttpServlet {
 		try {
 			// Get response
 
-			local_fileName = (String) request.getParameter("fileName");
-
+			local_fileName = (String) request.getParameter("fileName"); 
+			remote_AsteriskSrcFilename = (String) request.getParameter("fileName");
+			
 			// Client side server socket port to be started on
 			client_socket_port = MainServlet.client_socket_port;
 			// IP address of the rmi server
