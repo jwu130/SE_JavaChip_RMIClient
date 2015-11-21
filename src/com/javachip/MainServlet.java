@@ -37,6 +37,7 @@ public class MainServlet extends HttpServlet {
 		System.out.print("Enter the ip address of the rmi server:");
 		AsteriskJava_IP = reader.next();
 		reader.close();
+		System.out.println("This is the base directory: " + System.getProperty("user.dir"));
 	}
 
 	@Override

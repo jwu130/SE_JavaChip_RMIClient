@@ -129,12 +129,11 @@ public class RMI_Main {
 			// Look for subfolder called 'rmiclientfiles'
 			if (!directory.isDirectory())
 				throw new Exception("The directory rmiclientfiles does not exist");
-			File[] fList = directory.listFiles();
 
 			// Search through folder for file specified
 			local_fileName = local_fileName.replace("\"","");
-			clientFile = new File(local_fileName);
-			System.out.println("File is found in: " + clientFile.getAbsolutePath());
+			clientFile = new File(directory, local_fileName);
+			System.out.println("File can be found in: " + clientFile.getAbsolutePath());
 			
 			outStream = new PrintWriter(new FileOutputStream(clientFile));
 

@@ -34,7 +34,7 @@ public class UploadFile extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/FileUpload.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/4-FileUpload.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 

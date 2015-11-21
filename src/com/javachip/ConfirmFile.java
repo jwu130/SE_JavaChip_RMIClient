@@ -27,10 +27,12 @@ public class ConfirmFile extends HttpServlet {
 	// IP address of the rmi server
 	String AsteriskJava_IP = MainServlet.AsteriskJava_IP;
 	// Useless, need to get rid of
-	String serviceName = "retrieve_available_files";
+	String serviceName = "RPC_FileRead";
 	// Name of file on server side to be read from
 	String remote_AsteriskSrcFilename;
-
+	// Directory Name
+	String directory = "rmiclientfiles";
+	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -41,8 +43,8 @@ public class ConfirmFile extends HttpServlet {
 		try {
 			// Get response
 
-			local_fileName = (String) request.getParameter("fileName"); 
-			remote_AsteriskSrcFilename = (String) request.getParameter("fileName");
+			local_fileName = (String) request.getParameter("fileName").replace("\"", ""); 
+			remote_AsteriskSrcFilename = (String) request.getParameter("fileName").replace("\"", "");
 			
 			// Client side server socket port to be started on
 			client_socket_port = MainServlet.client_socket_port;
@@ -97,11 +99,16 @@ public class ConfirmFile extends HttpServlet {
 
 			local_fileName = local_fileName.replace("\"", "");
 
-			System.out.println("Folder is found in: " + System.getProperty("user.dir"));
+			File dir = new File(directory);
 
-			File file = new File(local_fileName);
+			if( !dir.isDirectory() )
+				throw new Exception("No folder " + directory + " found");
 
-			System.out.println("File is found in: " + file.getAbsolutePath());
+			System.out.println("Folder is found in: " + dir.getAbsolutePath());
+
+			File file = new File(dir, local_fileName);
+			
+			System.out.println("File is found here: " + file.getAbsolutePath());
 
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader(file);
