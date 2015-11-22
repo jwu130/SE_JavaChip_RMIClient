@@ -39,38 +39,22 @@ public class ServerFiles extends HttpServlet {
 		// Return to the browser this..
 		PrintWriter out = response.getWriter();
 
-		// Client side server socket port to be started on
-		client_socket_port = MainServlet.client_socket_port;
-		// IP address of the rmi server
-		AsteriskJava_IP = MainServlet.AsteriskJava_IP;
-		LinkedList<String> filesAvailable = null;
-
+		LinkedList filesAvailable = null;
+		
 		if (client_socket_port != 0 || AsteriskJava_IP != null) {
-			RMI_Main demo_instance = new RMI_Main(local_fileName, client_socket_port, AsteriskJava_IP, serviceName,
-					remote_AsteriskSrcFilename);
-
-			filesAvailable = demo_instance.availableFiles;
-
-			long start = System.currentTimeMillis();
-			long end = start + 5 * 1000; // 60 seconds * 1000 ms/sec
-			while (System.currentTimeMillis() < end) {
-			}
-
-			String s;
-			ListIterator<String> it = filesAvailable.listIterator();
-			while (it.hasNext()) {
-				s = it.next();
-			}
-
+			
+			filesAvailable = util.getAvailableFiles();
+			
 		} else {
 			System.out.println("Client Socket Port and Server IP is not available");
+			out.println("<h1> Server error </h1>");
 		}
 
 		if (filesAvailable != null)
 			request.setAttribute("fileList", filesAvailable);
 
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/testing.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/2-ChooseFile.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 

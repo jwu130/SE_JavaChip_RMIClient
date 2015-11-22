@@ -19,6 +19,8 @@ public class RMI_Main {
 	// To know when the transfer is completed
 	public boolean finished;
 	
+	public Object fin = new Object();
+
 	public LinkedList<String> availableFiles = new LinkedList<String>();
 
 	// The client ip address that the socket listener listens at
@@ -62,6 +64,7 @@ public class RMI_Main {
 					initialize_socket(socket_port, local_fileName);
 				} catch (Exception e) {
 					System.out.println("Error on initializing socket server");
+					e.printStackTrace();
 				}
 			}
 			// If AsteriskJava, create new client instance
@@ -131,10 +134,10 @@ public class RMI_Main {
 				throw new Exception("The directory rmiclientfiles does not exist");
 
 			// Search through folder for file specified
-			local_fileName = local_fileName.replace("\"","");
+			local_fileName = local_fileName.replace("\"", "");
 			clientFile = new File(directory, local_fileName);
 			System.out.println("File can be found in: " + clientFile.getAbsolutePath());
-			
+
 			outStream = new PrintWriter(new FileOutputStream(clientFile));
 
 		} catch (Exception e) {
@@ -174,21 +177,22 @@ public class RMI_Main {
 	public void socket_stream_buffer_close() {
 		pw.close();
 		try {
+			synchronized (fin) {
+				fin.notify();
+			}
 			br.close();
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public boolean getFinished(){
+
+	public boolean getFinished() {
 		return finished;
 	}
 
-	/** RMI_BioAPI_Demo constructor **/
-	public RMI_Main(String local_fileName, int client_socket_port, String rmiServer_ip, String serviceName,
-			String remote_AsteriskSrcFilename) throws RemoteException {
-
+	public void initialize(String local_fileName, int client_socket_port, String rmiServer_ip, String serviceName,
+			String remote_AsteriskSrcFilename) {
 		// Get system ip address
 		try {
 			socket_listener_ip = InetAddress.getLocalHost().getHostAddress();
@@ -199,12 +203,22 @@ public class RMI_Main {
 
 		// Create new threads, socket, and RMI_BioAPI_Asterisk_Client ( looks up
 		// remote object and invokes method on rm)
-		new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip, client_socket_port, local_fileName);
-		new RequestThread("AsteriskJava", rmiServer_ip, serviceName, remote_AsteriskSrcFilename, socket_listener_ip,
+		RequestThread socketThread = new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip,
 				client_socket_port, local_fileName);
+		RequestThread rmiThread = new RequestThread("AsteriskJava", rmiServer_ip, serviceName,
+				remote_AsteriskSrcFilename, socket_listener_ip, client_socket_port, local_fileName);
 
-		System.out.println("RMI_BioAPI_Demo instance is created. Local file name: " + local_fileName
-				+ ". Remote file name: " + remote_AsteriskSrcFilename);
+		try {
+			synchronized (fin) {
+				fin.wait();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** RMI_BioAPI_Demo constructor **/
+	public RMI_Main() throws RemoteException {
 	}
 
 }

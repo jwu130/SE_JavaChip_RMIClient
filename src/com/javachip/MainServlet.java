@@ -44,14 +44,6 @@ public class MainServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// // Set response content type to be html
-		// response.setContentType("text/html");
-		//
-		// // Return to the browser this..
-		// PrintWriter out = response.getWriter();
-		// out.println("<h1>" + message + "</h1>");
-		//
-		//
 		try {
 			getServletConfig().getServletContext().getRequestDispatcher("/testing.jsp").forward(request, response);
 		} catch (Exception e) {
@@ -61,7 +53,6 @@ public class MainServlet extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
 		}
-
 	}
 
 	@Override

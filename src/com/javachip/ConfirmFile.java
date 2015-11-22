@@ -31,7 +31,7 @@ public class ConfirmFile extends HttpServlet {
 	// Name of file on server side to be read from
 	String remote_AsteriskSrcFilename;
 	// Directory Name
-	String directory = "rmiclientfiles";
+	private static final String DIRECTORY_NAME = "rmiclientfiles";
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -53,20 +53,13 @@ public class ConfirmFile extends HttpServlet {
 
 			// Create a new instance of RMI client to initiate file content
 			// transfer
-			RMI_Main demo_instance = new RMI_Main(local_fileName, client_socket_port, AsteriskJava_IP, serviceName,
+			RMI_Main demo_instance = new RMI_Main();
+			
+			demo_instance.initialize(local_fileName, client_socket_port, AsteriskJava_IP, serviceName,
 					remote_AsteriskSrcFilename);
 
-			int count = 5;
-			while (!demo_instance.getFinished() && count > 0) {
-				long start = System.currentTimeMillis();
-				long end = start + 1 * 1000; // 1 seconds * 500 ms/sec
-				while (System.currentTimeMillis() < end) {
-				}
-				count--;
-			}
-
 			if (!demo_instance.getFinished())
-				throw new Exception("failed to get the file from server");
+				throw new Exception("Failed to get the file from server");
 			else
 				setFileRequest(request);
 
@@ -90,6 +83,7 @@ public class ConfirmFile extends HttpServlet {
 
 	}
 
+	// Possibly retrieve file contents directly from jsp
 	void setFileRequest(HttpServletRequest request) {
 		// This will reference one line at a time
 		String line = null;
@@ -99,10 +93,10 @@ public class ConfirmFile extends HttpServlet {
 
 			local_fileName = local_fileName.replace("\"", "");
 
-			File dir = new File(directory);
+			File dir = new File(DIRECTORY_NAME);
 
 			if( !dir.isDirectory() )
-				throw new Exception("No folder " + directory + " found");
+				throw new Exception("No folder " + DIRECTORY_NAME + " found");
 
 			System.out.println("Folder is found in: " + dir.getAbsolutePath());
 
