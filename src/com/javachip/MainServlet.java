@@ -45,7 +45,7 @@ public class MainServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/testing.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/Main.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 

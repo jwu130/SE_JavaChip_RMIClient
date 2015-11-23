@@ -2,6 +2,7 @@ package com.javachip;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -36,9 +37,6 @@ public class SaveUpload extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// // gets absolute path of the web application
-		// String applicationPath = request.getServletContext().getRealPath("");
-		// // constructs path of the directory to save uploaded file
 		String uploadFilePath = System.getProperty("user.dir");
 
 		// creates the save directory if it does not exists
@@ -56,16 +54,20 @@ public class SaveUpload extends HttpServlet {
 				part.write(uploadFilePath + File.separator + file);
 		}
 
-		// file2 = request.getParameter("file2");
-
 		try {
 			String srcFile = uploadFilePath + File.separator + file;
 			System.out.println("This is the file location: " + srcFile);
-			// request.setAttribute("file1", file1);
-			// request.setAttribute("file2", file2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		// Set response content type to be html
+		response.setContentType("text/html");
+
+		// Return to the browser this..
+		PrintWriter out = response.getWriter();
+		out.println("Got your upload. ");
+
 
 	}
 

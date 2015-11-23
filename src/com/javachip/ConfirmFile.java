@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,7 +71,9 @@ public class ConfirmFile extends HttpServlet {
 		}
 
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/confirmFile.jsp").forward(request, response);
+			Cookie cookie = new Cookie("MyCookie", local_fileName);
+		    response.addCookie(cookie);
+			getServletConfig().getServletContext().getRequestDispatcher("/ConfirmFile.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -78,7 +81,6 @@ public class ConfirmFile extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
 		}
-
 	}
 
 	// Possibly retrieve file contents directly from jsp
@@ -101,7 +103,7 @@ public class ConfirmFile extends HttpServlet {
 			
 			while ((line = bufferedReader.readLine()) != null) {
 				System.out.println(line);
-				fileContent += line + "\\n";
+				fileContent += line + "<br>";
 			}
 
 			System.out.println(fileContent);

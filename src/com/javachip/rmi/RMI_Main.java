@@ -191,7 +191,7 @@ public class RMI_Main {
 			while (System.currentTimeMillis() < end && !finished) {
 				if ((inputln = br.readLine()).equals("Xfer Start")) {
 					while (!((inputln = br.readLine()).equals("Done"))) {
-						inputln = inputln.trim();
+						inputln = inputln.replace("File","").trim();
 						System.out.println(inputln);
 						availableFiles.add(inputln);
 					}

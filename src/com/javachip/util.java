@@ -19,7 +19,7 @@ public class util {
 	// Name of file on server side to be read from
 	static String remote_AsteriskSrcFilename = "txtServer";
 
-	protected static LinkedList<String> getAvailableFiles() {
+	public static LinkedList<String> getAvailableFiles() {
 
 		// Client side server socket port to be started on
 		client_socket_port = MainServlet.client_socket_port;

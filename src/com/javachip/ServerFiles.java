@@ -59,7 +59,7 @@ public class ServerFiles extends HttpServlet {
 			request.setAttribute("fileList", filesAvailable);
 
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/2-ChooseFile.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/ChooseFile.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 

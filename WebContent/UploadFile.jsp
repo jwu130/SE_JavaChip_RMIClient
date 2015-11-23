@@ -4,19 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>XML Merger - File Confirm</title>
+<title>Title</title>
 </head>
 
 <body bgcolor="white">
 
-	<h1>Hello Hello! Got your choice</h1>
-	<%=request.getAttribute("confirmFile")%>
-	<form action="UploadFile">
-		Is this the file you wanted? 
-		<input type="submit" value="yes" name="confirm" >
-		<input type="submit" value="no" name="confirm" >
-	</form>
+	<h1>Hello Hello! Upload the second file</h1>
 
+	<form action="${pageContext.request.contextPath}/saveUpload" method="post" enctype="multipart/form-data">
+		<input type="file" name="file"> 
+		<input type="submit">
+	</form>
 
 </body>
 </html>
