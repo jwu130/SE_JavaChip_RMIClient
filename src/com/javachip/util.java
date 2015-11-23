@@ -1,5 +1,7 @@
 package com.javachip;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -52,6 +54,16 @@ public class util {
 		}
 		
 		return filesAvailable;
+	}
+	
+	// public void deleteFile(File dir, String fileName)
+	public void deleteFile(String fileName){
+		
+		File file = new File(fileName);
+		if( file.exists()) {
+			file.delete();
+		}
+
 	}
 	
 	public static void main(String args []) {
