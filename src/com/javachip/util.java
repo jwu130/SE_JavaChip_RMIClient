@@ -21,15 +21,10 @@ public class util {
 
 	protected static LinkedList<String> getAvailableFiles() {
 
-//		// Client side server socket port to be started on
-//		client_socket_port = MainServlet.client_socket_port;
-//		// IP address of the rmi server
-//		AsteriskJava_IP = MainServlet.AsteriskJava_IP;
-		
 		// Client side server socket port to be started on
-		client_socket_port = 7000;
+		client_socket_port = MainServlet.client_socket_port;
 		// IP address of the rmi server
-		AsteriskJava_IP = "192.168.1.2";
+		AsteriskJava_IP = MainServlet.AsteriskJava_IP;
 		
 		LinkedList<String> filesAvailable = null;
 
@@ -46,12 +41,12 @@ public class util {
 			
 			filesAvailable = demo_instance.availableFiles;
 
-			String s;
+			System.out.println("This is the linked list");
 			ListIterator<String> it = filesAvailable.listIterator();
 			while (it.hasNext()) {
-				s = it.next();
+				System.out.println(it.next());
 			}
-
+			
 		} else {
 			System.out.println("Client Socket Port and Server IP is not available");
 		}
@@ -59,9 +54,9 @@ public class util {
 		return filesAvailable;
 	}
 	
-	
-	
 	public static void main(String args []) {
+		client_socket_port = 7000;
+		AsteriskJava_IP = "192.168.1.2";
 		LinkedList linked = getAvailableFiles();
 		System.out.println("This is the list " + linked.toString());
 	}

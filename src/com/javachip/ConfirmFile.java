@@ -30,8 +30,6 @@ public class ConfirmFile extends HttpServlet {
 	String serviceName = "RPC_FileRead";
 	// Name of file on server side to be read from
 	String remote_AsteriskSrcFilename;
-	// Directory Name
-	private static final String DIRECTORY_NAME = "rmiclientfiles";
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -88,34 +86,26 @@ public class ConfirmFile extends HttpServlet {
 		// This will reference one line at a time
 		String line = null;
 		String fileContent = "";
-
+		
 		try {
-
 			local_fileName = local_fileName.replace("\"", "");
 
-			File dir = new File(DIRECTORY_NAME);
+			File file = new File(local_fileName);
 
-			if( !dir.isDirectory() )
-				throw new Exception("No folder " + DIRECTORY_NAME + " found");
-
-			System.out.println("Folder is found in: " + dir.getAbsolutePath());
-
-			File file = new File(dir, local_fileName);
-			
 			System.out.println("File is found here: " + file.getAbsolutePath());
 
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader(file);
-
 			// Always wrap FileReader in BufferedReader.
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+			
 			while ((line = bufferedReader.readLine()) != null) {
 				System.out.println(line);
-				fileContent += line;
+				fileContent += line + "\\n";
 			}
 
-			// Always close files.
+			System.out.println(fileContent);
+			
 			bufferedReader.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();

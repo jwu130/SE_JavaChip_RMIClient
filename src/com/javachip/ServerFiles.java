@@ -41,6 +41,11 @@ public class ServerFiles extends HttpServlet {
 
 		LinkedList filesAvailable = null;
 		
+		// Client side server socket port to be started on
+		int client_socket_port = MainServlet.client_socket_port;
+		// IP address of the rmi server
+		String AsteriskJava_IP = MainServlet.AsteriskJava_IP;
+		
 		if (client_socket_port != 0 || AsteriskJava_IP != null) {
 			
 			filesAvailable = util.getAvailableFiles();

@@ -18,7 +18,7 @@ public class RMI_Main {
 
 	// To know when the transfer is completed
 	public boolean finished;
-	
+
 	public Object fin = new Object();
 
 	public LinkedList<String> availableFiles = new LinkedList<String>();
@@ -65,6 +65,8 @@ public class RMI_Main {
 				} catch (Exception e) {
 					System.out.println("Error on initializing socket server");
 					e.printStackTrace();
+				} finally {
+					socket_stream_buffer_close();
 				}
 			}
 			// If AsteriskJava, create new client instance
@@ -83,6 +85,8 @@ public class RMI_Main {
 	private Socket socket;
 	private ServerSocket serverSocket = null;
 
+	private String serviceName;
+
 	public void initialize_socket(int port, String local_fileName) {
 		try {
 			// Create client side server socket bound to specified port
@@ -95,7 +99,10 @@ public class RMI_Main {
 			System.out.println("Client socket address(IP address: port): " + addrr);
 
 			initialize_socket_stream_buffer();
-			socket_listener(local_fileName);
+			if (this.serviceName == "RPC_FileRead")
+				socket_listener_save(local_fileName);
+			else if (serviceName == "retrieve_available_files")
+				socket_listener_names();
 			serverSocket.close();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port: " + port + e.getMessage());
@@ -117,26 +124,28 @@ public class RMI_Main {
 		}
 	}
 
-	public void socket_listener(String local_fileName) {
+	public void socket_listener_save(String local_fileName) {
 		String inputln;
 		PrintWriter outStream = null;
 
-		// Find/create file and create printwriter
 		try {
-			File directory = new File("rmiclientfiles");
-			File clientFile = null;
+			// File directory = new File("rmiclientfiles");
+			File clientFile = new File(local_fileName);
 
-			System.out.println("Folder is found in: " + System.getProperty("user.dir"));
-			System.out.println("Recieving data from server: ");
-
-			// Look for subfolder called 'rmiclientfiles'
-			if (!directory.isDirectory())
-				throw new Exception("The directory rmiclientfiles does not exist");
+			// System.out.println("Folder is found in: " +
+			// System.getProperty("user.dir"));
+			//
+			// // Look for subfolder called 'rmiclientfiles'
+			// if (!directory.isDirectory()) {
+			// // throw new Exception("The directory rmiclientfiles does not
+			// // exist");
+			// directory.mkdirs();
+			// }
 
 			// Search through folder for file specified
-			local_fileName = local_fileName.replace("\"", "");
-			clientFile = new File(directory, local_fileName);
+			// clientFile = new File(directory, local_fileName);
 			System.out.println("File can be found in: " + clientFile.getAbsolutePath());
+			System.out.println("Recieving data from server: ");
 
 			outStream = new PrintWriter(new FileOutputStream(clientFile));
 
@@ -151,20 +160,17 @@ public class RMI_Main {
 		finished = false;
 		try {
 			while (System.currentTimeMillis() < end && !finished) {
-
-				while (true) {
-					if ((inputln = br.readLine()).equals("Xfer Start")) {
-						while (!((inputln = br.readLine()).equals("Done"))) {
-							inputln = inputln.trim();
-							outStream.println(inputln);
-							System.out.println(inputln);
-							availableFiles.add(inputln);
-						}
-
-						finished = true;
-						break;
+				if ((inputln = br.readLine()).equals("Xfer Start")) {
+					while (!((inputln = br.readLine()).equals("Done"))) {
+						inputln = inputln.trim();
+						outStream.println(inputln);
+						System.out.println(inputln);
 					}
+
+					finished = true;
+					break;
 				}
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -174,14 +180,42 @@ public class RMI_Main {
 		socket_stream_buffer_close();
 	}
 
+	public void socket_listener_names() {
+		String inputln;
+
+		long start = System.currentTimeMillis();
+		long end = start + 60 * 1000; // 60 seconds * 1000 ms/sec
+
+		finished = false;
+		try {
+			while (System.currentTimeMillis() < end && !finished) {
+				if ((inputln = br.readLine()).equals("Xfer Start")) {
+					while (!((inputln = br.readLine()).equals("Done"))) {
+						inputln = inputln.trim();
+						System.out.println(inputln);
+						availableFiles.add(inputln);
+					}
+
+					finished = true;
+					break;
+				}
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		socket_stream_buffer_close();
+	}
+
 	public void socket_stream_buffer_close() {
 		pw.close();
 		try {
+			socket.close();
 			synchronized (fin) {
 				fin.notify();
 			}
 			br.close();
-			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -201,6 +235,8 @@ public class RMI_Main {
 			e.printStackTrace();
 		}
 
+		this.serviceName = serviceName;
+		
 		// Create new threads, socket, and RMI_BioAPI_Asterisk_Client ( looks up
 		// remote object and invokes method on rm)
 		RequestThread socketThread = new RequestThread("socket", "N/A", "N/A", "N/A", socket_listener_ip,

@@ -6,23 +6,22 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class FileMerge {
 
 	// To store the lines that are already in file 1
-	static HashSet<String> file1Set = new HashSet<String>();
-	// Lists of file contents by line
-	static ArrayList<String> file2List = new ArrayList<String>();
-	static ArrayList<String> file1List = new ArrayList<String>();
+	HashSet file1Set = new HashSet();
 	// Repeated lines
-	static ArrayList<String> repeats = new ArrayList<String>();
+	LinkedList repeats = new LinkedList();
 	// Merged List
-	static ArrayList<String> results = new ArrayList<String>();
-	
-	public static void mergeFilesList(File parent, String name1, String name2) throws IOException {
+	int results[];
+	int resultsLast = 0;
+
+	public void mergeFilesList(File parent, String name1, String name2) throws IOException {
 
 		File file1 = new File(parent, name1);
 		File file2 = new File(parent, name2);
@@ -30,24 +29,41 @@ public class FileMerge {
 		BufferedReader br = new BufferedReader(new FileReader(file1));
 		BufferedReader br2 = new BufferedReader(new FileReader(file2));
 
+		int count = 0;
+
 		String inline = "";
+		int num;
 
 		try {
 			while ((inline = br.readLine()) != null) {
-				inline.trim();
-				file1List.add(inline);
-				file1Set.add(inline);
+				num = Integer.parseInt(inline.trim());
+				count++;
+				file1Set.add(num);
 			}
 			while ((inline = br2.readLine()) != null) {
-				inline.trim();
-				if (file1Set.contains(inline)) {
-					repeats.add(inline);
+				count++;
+			}
+
+			br.close();
+			br2.close();
+			br = new BufferedReader(new FileReader(file1));
+			br2 = new BufferedReader(new FileReader(file2));
+			results = new int[count];
+
+			while ((inline = br.readLine()) != null) {
+				num = Integer.parseInt(inline.trim());
+				results[resultsLast] = num;
+				resultsLast++;
+			}
+			while ((inline = br2.readLine()) != null) {
+				num = Integer.parseInt(inline.trim());
+				if (file1Set.contains(num)) {
+					repeats.add(num);
 				} else {
-					file2List.add(inline);
+					results[resultsLast] = num;
+					resultsLast++;
 				}
 			}
-			results.addAll(file1List);
-			results.addAll(file2List);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -56,23 +72,93 @@ public class FileMerge {
 		}
 	}
 
-	public static void saveMerge(File parentDir, String fileName, boolean keepRepeats)
-			throws FileNotFoundException {
-		File mergeFile = new File(parentDir, fileName);
-		if (mergeFile.exists()) {
-			System.out.println("File already exists, please choose a different file name. Canceling merge.");
-			System.exit(0);
+	public LinkedList getRepeats() {
+		return repeats;
+	}
+
+	public void setRepeats(LinkedList l) {
+		repeats = l;
+	}
+
+	public void saveMerge(String fileName) throws FileNotFoundException {
+		File mergeFile = new File(fileName);
+
+		addToResult(repeats);
+
+		sort(results, 0, results.length - 1);
+
+		// Save merged file
+		PrintWriter pw = new PrintWriter(mergeFile);
+		for (int i = 0; i < results.length; i++) {
+			pw.println(results[i]);
 		}
 		
-		if (keepRepeats) 
-			results.addAll(repeats);
-			
-		PrintWriter pw = new PrintWriter(mergeFile);
-		Iterator<String> iterator = results.iterator();
-		while (iterator.hasNext()) {
-			pw.println(iterator.next());
-		}
 		pw.close();
+	}
+
+	public void addToResult(LinkedList l) {
+		Iterator i = l.iterator();
+		try {
+			while (i.hasNext()) {
+				results[resultsLast] = (int) i.next();
+				resultsLast++;
+			}
+		} catch (Exception e) {
+			System.out.println("addToResult failled");
+			e.printStackTrace();
+		}
+	}
+
+	public static void sort(int[] numArr, int low, int hi) {
+		int[] temp = new int[hi];
+		int point = 0;
+
+		temp[point] = low;
+		// point++;
+		temp[++point] = hi;
+
+		while (point > -1) {
+			hi = temp[point--];
+			low = temp[point--];
+
+			int hi2 = hi;
+			int low2 = low;
+
+			int temp2 = numArr[hi2];
+
+			int y = (low2 - 1);
+
+			for (int i = low2; i <= hi2 - 1; i++) {
+				if (numArr[i] <= temp2) {
+					y++;
+					swap(numArr, y, i);
+				}
+			}
+			swap(numArr, y + 1, hi2);
+
+			int pivot = y + 1;
+
+			// point++;
+			if (pivot - 1 > low) {
+				point++;
+				temp[point] = low;
+				temp[++point] = pivot - 1;
+			}
+
+			if (pivot + 1 < hi) {
+				point++;
+				temp[point] = pivot + 1;
+				temp[++point] = hi;
+			}
+
+			// System.out.println("wdkw");
+		} // while
+	}
+
+	public static void swap(int a[], int i, int j) {
+		int temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
 	}
 
 	public static void main(String args[]) {
@@ -92,14 +178,16 @@ public class FileMerge {
 		// ----------------------------------
 
 		try {
-			mergeFilesList(mergeTestFiles, "Local.txt", "Remote.txt");
-			saveMerge(mergeTestFiles, "MergedFileTest2", true);
+			String fileName = Long.toString(new Date().getTime());
+			FileMerge filemerge = new FileMerge();
+			filemerge.mergeFilesList(mergeTestFiles, "Local.txt", "Remote.txt");
+			filemerge.saveMerge(fileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("finished");
 	}
 
 }

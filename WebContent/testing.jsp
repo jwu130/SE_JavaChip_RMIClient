@@ -10,6 +10,11 @@
 <body bgcolor="white">
 
 	<h1>Hello Hello!</h1>
-	
+
+	<form action="${pageContext.request.contextPath}/saveUpload" method="post" enctype="multipart/form-data">
+		<input type="file" name="file"> 
+		<input type="submit">
+	</form>
+
 </body>
 </html>
