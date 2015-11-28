@@ -41,6 +41,12 @@ public class FileChoices extends HttpServlet {
 		
 		getServerFiles(request, response, out);
 
+		try {
+			getServletConfig().getServletContext().getRequestDispatcher("/MainPage.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
+		}
 	}
 
 	public void getServerFiles(HttpServletRequest request, HttpServletResponse response, PrintWriter out){
@@ -52,7 +58,6 @@ public class FileChoices extends HttpServlet {
 		String AsteriskJava_IP = MainServlet.AsteriskJava_IP;
 		
 		if (client_socket_port != 0 || AsteriskJava_IP != null) {
-			
 			filesAvailable = util.getAvailableFiles();
 			
 		} else {
@@ -62,15 +67,5 @@ public class FileChoices extends HttpServlet {
 
 		if (filesAvailable != null)
 			request.setAttribute("fileList", filesAvailable);
-
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/ChooseFile.jsp").forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			// Return to the browser this..
-			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
-		}
-
 	}
 }

@@ -84,16 +84,10 @@ public class MainServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		// Return to the browser this..
+		PrintWriter out = response.getWriter();
+		out.println("<h1> Hello This is the main page </h1>");
 
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/Main.jsp").forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			// Return to the browser this..
-			PrintWriter out = response.getWriter();
-			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
-		}
 	}
 
 	@Override
