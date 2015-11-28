@@ -20,12 +20,12 @@ import com.javachip.rmi.RMI_Main;
  * Requires a upload file and a "fileName" to retrieve from rmi server
  */
 
-@WebServlet("/saveUpload/*")
+@WebServlet("/RetrieveChoices/*")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
 maxFileSize = 1024 * 1024 * 50, // 50 MB
 maxRequestSize = 1024 * 1024 * 100) // 100 MB
 
-public class SaveUpload extends HttpServlet {
+public class RetrieveChoices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// Useless, need to get rid of
@@ -70,8 +70,8 @@ public class SaveUpload extends HttpServlet {
 		}
 		
 		uploadedFile = fileName;
-
-		setRequestAttr(request, fileName);
+	
+		setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
 		
 		try {
 			String srcFile = uploadFilePath + File.separator + fileName;
@@ -113,7 +113,7 @@ public class SaveUpload extends HttpServlet {
 			if (!demo_instance.getFinished())
 				throw new Exception("Failed to get the file from server");
 			else
-				setRequestAttr(request, local_fileName);
+				setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,7 +128,7 @@ public class SaveUpload extends HttpServlet {
 	}
 
 	// Possibly retrieve file contents directly from jsp
-	void setRequestAttr(HttpServletRequest request, String local_fileName) {
+	void setRequestAttr(HttpServletRequest request, String local_fileName, String attributeName, String fileNameAttribute) {
 		// This will reference one line at a time
 		String line = null;
 		String fileContent = "";
@@ -157,7 +157,8 @@ public class SaveUpload extends HttpServlet {
 			ex.printStackTrace();
 		}
 
-		request.setAttribute("confirmFile", fileContent);
+		request.setAttribute(attributeName, fileContent);
+		request.setAttribute(fileNameAttribute, fileContent);
 	}
 
 }
