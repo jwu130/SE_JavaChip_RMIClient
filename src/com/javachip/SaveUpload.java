@@ -1,8 +1,9 @@
 package com.javachip;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,10 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.javachip.rmi.RMI_Main;
+
 /**
- * Servlet implementation class saveUpload Requires a upload file and a name for
- * "file2" already stored in rmiclientfiles
+ * Servlet implementation class saveUpload 
+ * Requires a upload file and a "fileName" to retrieve from rmi server
  */
+
 @WebServlet("/saveUpload/*")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
 maxFileSize = 1024 * 1024 * 50, // 50 MB
@@ -24,19 +28,30 @@ maxRequestSize = 1024 * 1024 * 100) // 100 MB
 public class SaveUpload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	// Name of file uploaded
-	String file;
-
-	/**
-	 * Directory where uploaded files will be saved, its relative to the web
-	 * application directory.
-	 */
-	// private static final String DIRECTORY_NAME = "rmiclientfiles";
+	// Useless, need to get rid of
+	String serviceName = "RPC_FileRead";
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
+		try {
+			// Set response content type to be html
+			response.setContentType("text/html");
+			
+			String uploadedFile = "";
+			saveUpload(request, response, uploadedFile);
+			
+			String local_fileName = "";
+			saveFileFromServer(request, response, local_fileName);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void saveUpload(HttpServletRequest request, HttpServletResponse response, String uploadedFile)
+			throws IllegalStateException, IOException, ServletException {
 		String uploadFilePath = System.getProperty("user.dir");
 
 		// creates the save directory if it does not exists
@@ -46,29 +61,24 @@ public class SaveUpload extends HttpServlet {
 		}
 		System.out.println("Upload File Directory=" + fileSaveDir.getAbsolutePath());
 
-		file = "";
+		String fileName = "";
 		// Get all the parts from request and write it to the file on server
 		for (Part part : request.getParts()) {
-			file = getFileName(part);
-			if (file != "")
-				part.write(uploadFilePath + File.separator + file);
+			fileName = getFileName(part);
+			if (fileName != "")
+				part.write(uploadFilePath + File.separator + fileName);
 		}
+		
+		uploadedFile = fileName;
 
+		setRequestAttr(request, fileName);
+		
 		try {
-			String srcFile = uploadFilePath + File.separator + file;
+			String srcFile = uploadFilePath + File.separator + fileName;
 			System.out.println("This is the file location: " + srcFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		// Set response content type to be html
-		response.setContentType("text/html");
-
-		// Return to the browser this..
-		PrintWriter out = response.getWriter();
-		out.println("Got your upload. ");
-
-
 	}
 
 	/**
@@ -84,6 +94,70 @@ public class SaveUpload extends HttpServlet {
 			}
 		}
 		return "";
+	}
+
+	public void saveFileFromServer(HttpServletRequest request, HttpServletResponse response, String local_fileName) {
+		try {
+			local_fileName = (String) request.getParameter("fileName").replace("\"", "");
+
+			// Client side server socket port to be started on
+			int client_socket_port = MainServlet.client_socket_port;
+			// IP address of the rmi server
+			String AsteriskJava_IP = MainServlet.AsteriskJava_IP;
+
+			// Create a new instance of RMI client to initiate file content
+			// transfer
+			RMI_Main demo_instance = new RMI_Main();
+			demo_instance.initialize(local_fileName, client_socket_port, AsteriskJava_IP, serviceName, local_fileName);
+
+			if (!demo_instance.getFinished())
+				throw new Exception("Failed to get the file from server");
+			else
+				setRequestAttr(request, local_fileName);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			getServletConfig().getServletContext().getRequestDispatcher("/ConfirmFile.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// Possibly retrieve file contents directly from jsp
+	void setRequestAttr(HttpServletRequest request, String local_fileName) {
+		// This will reference one line at a time
+		String line = null;
+		String fileContent = "";
+
+		try {
+			local_fileName = local_fileName.replace("\"", "");
+
+			File file = new File(local_fileName);
+
+			System.out.println("File is found here: " + file.getAbsolutePath());
+
+			// FileReader reads text files in the default encoding.
+			FileReader fileReader = new FileReader(file);
+			// Always wrap FileReader in BufferedReader.
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+			while ((line = bufferedReader.readLine()) != null) {
+				System.out.println(line);
+				fileContent += line + "<br>";
+			}
+
+			System.out.println(fileContent);
+
+			bufferedReader.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		request.setAttribute("confirmFile", fileContent);
 	}
 
 }

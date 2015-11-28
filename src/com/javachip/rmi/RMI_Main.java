@@ -129,21 +129,7 @@ public class RMI_Main {
 		PrintWriter outStream = null;
 
 		try {
-			// File directory = new File("rmiclientfiles");
 			File clientFile = new File(local_fileName);
-
-			// System.out.println("Folder is found in: " +
-			// System.getProperty("user.dir"));
-			//
-			// // Look for subfolder called 'rmiclientfiles'
-			// if (!directory.isDirectory()) {
-			// // throw new Exception("The directory rmiclientfiles does not
-			// // exist");
-			// directory.mkdirs();
-			// }
-
-			// Search through folder for file specified
-			// clientFile = new File(directory, local_fileName);
 			System.out.println("File can be found in: " + clientFile.getAbsolutePath());
 			System.out.println("Recieving data from server: ");
 
@@ -191,7 +177,7 @@ public class RMI_Main {
 			while (System.currentTimeMillis() < end && !finished) {
 				if ((inputln = br.readLine()).equals("Xfer Start")) {
 					while (!((inputln = br.readLine()).equals("Done"))) {
-						inputln = inputln.replace("File","").trim();
+						inputln = inputln.trim();
 						System.out.println(inputln);
 						availableFiles.add(inputln);
 					}

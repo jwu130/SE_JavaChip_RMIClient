@@ -80,7 +80,7 @@ public class FileMerge {
 		repeats = l;
 	}
 
-	public void saveMerge(String fileName) throws FileNotFoundException {
+	public void saveAndMerge(String fileName) throws FileNotFoundException {
 		File mergeFile = new File(fileName);
 
 		addToResult(repeats);
@@ -181,7 +181,7 @@ public class FileMerge {
 			String fileName = Long.toString(new Date().getTime());
 			FileMerge filemerge = new FileMerge();
 			filemerge.mergeFilesList(mergeTestFiles, "Local.txt", "Remote.txt");
-			filemerge.saveMerge(fileName);
+			filemerge.saveAndMerge(fileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

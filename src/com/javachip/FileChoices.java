@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.javachip.rmi.RMI_Main;
 
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = "/serverFiles", loadOnStartup = 1)
+@WebServlet(urlPatterns = "/FileChoices", loadOnStartup = 1)
 
-public class ServerFiles extends HttpServlet {
+public class FileChoices extends HttpServlet {
 
 	// Name of file on client side to be written to
 	String local_fileName = "ServerFilesList"; // Not needed
@@ -38,7 +38,12 @@ public class ServerFiles extends HttpServlet {
 
 		// Return to the browser this..
 		PrintWriter out = response.getWriter();
+		
+		getServerFiles(request, response, out);
 
+	}
+
+	public void getServerFiles(HttpServletRequest request, HttpServletResponse response, PrintWriter out){
 		LinkedList filesAvailable = null;
 		
 		// Client side server socket port to be started on
@@ -66,5 +71,6 @@ public class ServerFiles extends HttpServlet {
 			// Return to the browser this..
 			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
 		}
+
 	}
 }
