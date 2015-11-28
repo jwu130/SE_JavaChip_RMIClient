@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
+import javax.servlet.UnavailableException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +32,52 @@ public class MainServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		System.out.print("Enter socket port for rmi client:");
-		Scanner reader = new Scanner(System.in); // Reading from System.in
-		client_socket_port = Integer.parseInt(reader.next());
-		System.out.print("Enter the ip address of the rmi server:");
-		AsteriskJava_IP = reader.next();
-		reader.close();
+		String temp;
+		boolean good = true;
+		Scanner reader = null;
+
+		try {
+			System.out.print("Enter socket port for rmi client:");
+			reader = new Scanner(System.in); // Reading from System.in
+			temp = reader.next();
+			if (!ValidationUtil.validSocketPort(temp)) {
+				good = false;
+				for (int i = 0; i < 3; i++) {
+					System.out.print("Invalid socket port number. Try again: ");
+					temp = reader.next();
+					if (ValidationUtil.validSocketPort(temp)) {
+						good = true;
+						client_socket_port = Integer.parseInt(temp);
+						break;
+					}
+				}
+			} else
+				client_socket_port = Integer.parseInt(temp);
+
+			if (!good)
+				throw new UnavailableException("Failed to retrieve socket port number.");
+
+			System.out.print("Enter the ip address of the rmi server:");
+			AsteriskJava_IP = reader.next();
+			if (!ValidationUtil.validIP(AsteriskJava_IP)) {
+				good = false;
+				for (int i = 0; i < 3; i++) {
+					System.out.print("Invalid IP address. Try again: ");
+					AsteriskJava_IP = reader.next();
+					if (ValidationUtil.validIP(AsteriskJava_IP)) {
+						good = true;
+						break;
+					}
+				}
+			}
+
+			if (!good)
+				throw new UnavailableException("Failed to retrieve rmi server ip address.");
+
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
 		System.out.println("This is the base directory: " + System.getProperty("user.dir"));
 	}
 
