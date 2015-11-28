@@ -21,7 +21,7 @@ public class FileMerge {
 	int results[];
 	int resultsLast = 0;
 
-	public void mergeFilesList(File parent, String name1, String name2) throws IOException {
+	public void mergeFiles(File parent, String name1, String name2) throws IOException {
 
 		File file1 = new File(parent, name1);
 		File file2 = new File(parent, name2);
@@ -180,7 +180,7 @@ public class FileMerge {
 		try {
 			String fileName = Long.toString(new Date().getTime());
 			FileMerge filemerge = new FileMerge();
-			filemerge.mergeFilesList(mergeTestFiles, "Local.txt", "Remote.txt");
+			filemerge.mergeFiles(mergeTestFiles, "Local.txt", "Remote.txt");
 			filemerge.saveAndMerge(fileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

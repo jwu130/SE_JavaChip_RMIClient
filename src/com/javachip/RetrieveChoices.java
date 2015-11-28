@@ -1,8 +1,6 @@
 package com.javachip;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -71,7 +69,7 @@ public class RetrieveChoices extends HttpServlet {
 		
 		uploadedFile = fileName;
 	
-		setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
+		util.setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
 		
 		try {
 			String srcFile = uploadFilePath + File.separator + fileName;
@@ -113,7 +111,7 @@ public class RetrieveChoices extends HttpServlet {
 			if (!demo_instance.getFinished())
 				throw new Exception("Failed to get the file from server");
 			else
-				setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
+				util.setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,40 +123,6 @@ public class RetrieveChoices extends HttpServlet {
 			e.printStackTrace();
 		}
 
-	}
-
-	// Possibly retrieve file contents directly from jsp
-	void setRequestAttr(HttpServletRequest request, String local_fileName, String attributeName, String fileNameAttribute) {
-		// This will reference one line at a time
-		String line = null;
-		String fileContent = "";
-
-		try {
-			local_fileName = local_fileName.replace("\"", "");
-
-			File file = new File(local_fileName);
-
-			System.out.println("File is found here: " + file.getAbsolutePath());
-
-			// FileReader reads text files in the default encoding.
-			FileReader fileReader = new FileReader(file);
-			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-			while ((line = bufferedReader.readLine()) != null) {
-				System.out.println(line);
-				fileContent += line + "<br>";
-			}
-
-			System.out.println(fileContent);
-
-			bufferedReader.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		request.setAttribute(attributeName, fileContent);
-		request.setAttribute(fileNameAttribute, fileContent);
 	}
 
 }
