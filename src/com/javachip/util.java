@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.javachip.rmi.RMI_Main;
 
-public class util {
+public class Util {
 
 	// Client side server socket port to be started on
 	static int client_socket_port = MainServlet.client_socket_port;

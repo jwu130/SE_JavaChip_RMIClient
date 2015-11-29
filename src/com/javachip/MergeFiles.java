@@ -45,7 +45,7 @@ public class MergeFiles extends HttpServlet {
 			
 			fileMerge.saveAndMerge(mergeFileName);
 
-			util.setRequestAttr(request, file1, "mergedFile", mergeFileName);
+			Util.setRequestAttr(request, file1, "mergedFile", mergeFileName);
 		}		
 	}
 

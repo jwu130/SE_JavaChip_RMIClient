@@ -58,7 +58,7 @@ public class FileChoices extends HttpServlet {
 		String AsteriskJava_IP = MainServlet.AsteriskJava_IP;
 		
 		if (client_socket_port != 0 || AsteriskJava_IP != null) {
-			filesAvailable = util.getAvailableFiles();
+			filesAvailable = Util.getAvailableFiles();
 			
 		} else {
 			System.out.println("Client Socket Port and Server IP is not available");

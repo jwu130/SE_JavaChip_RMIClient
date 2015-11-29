@@ -47,6 +47,12 @@ public class RetrieveChoices extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		try {
+			getServletConfig().getServletContext().getRequestDispatcher("/ViewBothFiles.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -71,7 +77,7 @@ public class RetrieveChoices extends HttpServlet {
 		
 		uploadedFile = fileName;
 	
-		util.setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
+		Util.setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
 		
 		try {
 			String srcFile = uploadFilePath + File.separator + fileName;
@@ -113,18 +119,11 @@ public class RetrieveChoices extends HttpServlet {
 			if (!demo_instance.getFinished())
 				throw new Exception("Failed to get the file from server");
 			else
-				util.setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
+				Util.setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/ConfirmFile.jsp").forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 }
