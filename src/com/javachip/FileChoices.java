@@ -3,7 +3,6 @@ package com.javachip;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.javachip.rmi.RMI_Main;
+import com.javachip.util.Util;
 
 @SuppressWarnings("serial")
 @WebServlet(urlPatterns = "/FileChoices", loadOnStartup = 1)

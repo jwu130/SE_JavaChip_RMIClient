@@ -1,8 +1,6 @@
 package com.javachip;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -14,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.javachip.rmi.RMI_Main;
+import com.javachip.util.Util;
 
 /**
  * Servlet implementation class saveUpload 

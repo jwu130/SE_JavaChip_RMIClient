@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.javachip.util.ValidationUtil;
+
 @SuppressWarnings("serial")
 @WebServlet(urlPatterns = { "/main" }, loadOnStartup = 1)
 
@@ -22,9 +24,9 @@ public class MainServlet extends HttpServlet {
 	// Name of file on client side to be written to
 	String local_fileName = "txtClient"; // currently test value
 	// Client side server socket port to be started on
-	static int client_socket_port = 0;
+	public static int client_socket_port = 0;
 	// IP address of the rmi server
-	static String AsteriskJava_IP; // should be input
+	public static String AsteriskJava_IP; // should be input
 	// Useless, need to get rid of
 	String serviceName = "retrieve_available_files";
 	// Name of file on server side to be read from

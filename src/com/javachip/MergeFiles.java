@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.javachip.merge.FileMerge;
+import com.javachip.util.Util;
 
 /**
  * Servlet implementation class MergeFiles
