@@ -16,12 +16,13 @@
 <%-- Populate drop down with filenames --%>
 
 <%@ page import="java.util.LinkedList"%>
-	<%@ page import="com.javachip.Util"%>
+	<%@ page import="com.javachip.util.Util"%>
 	<%@ page import="java.util.ListIterator"%>
 	
 	<% LinkedList<String> fileNames = Util.getAvailableFiles(); %>
 	<% ListIterator<String> listIterator = fileNames.listIterator(); %>
 	<% String filename1; %>
+	<% String filename2; %>
 	
 
 	<form action="${pageContext.request.contextPath}/RetrieveChoices" method="post" enctype="multipart/form-data">
