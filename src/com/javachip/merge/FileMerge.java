@@ -97,6 +97,9 @@ public class FileMerge {
 	}
 
 	public void addToResult(LinkedList l) {
+		
+		if(l!=null){
+		
 		Iterator i = l.iterator();
 		try {
 			while (i.hasNext()) {
@@ -106,6 +109,11 @@ public class FileMerge {
 		} catch (Exception e) {
 			System.out.println("addToResult failled");
 			e.printStackTrace();
+		}
+		
+		}
+		else{
+			
 		}
 	}
 

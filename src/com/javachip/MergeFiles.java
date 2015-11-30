@@ -16,15 +16,15 @@ import com.javachip.util.Util;
 /**
  * Servlet implementation class MergeFiles
  */
-@WebServlet("/MergeFiles")
+@WebServlet("/MergeFiles/*")
 public class MergeFiles extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String file1 = (String) request.getParameter("file1").replace("\"", "");
-		String file2 = (String) request.getParameter("file2").replace("\"", "");
+		String file1 = (String) request.getParameter("file1");
+		String file2 = (String) request.getParameter("file2");
 
 		String temp = request.getParameter("keepRepeats");
 		boolean saveRepeats;
@@ -48,6 +48,14 @@ public class MergeFiles extends HttpServlet {
 
 			Util.setRequestAttr(request, file1, "mergedFile", mergeFileName);
 		}		
+	
+		try {
+			getServletConfig().getServletContext().getRequestDispatcher("/MergeComplete.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("<h1> Hello. The server could not get the page you requested. </h1>");
+		}
+	
 	}
 
 	/**

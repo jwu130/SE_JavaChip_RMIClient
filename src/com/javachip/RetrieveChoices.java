@@ -19,7 +19,7 @@ import com.javachip.util.Util;
  * "fileName" to retrieve from rmi server
  */
 
-@WebServlet("/RetrieveChoices/*")
+@WebServlet("/RetrieveChoices")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
 maxFileSize = 1024 * 1024 * 50, // 50 MB
 maxRequestSize = 1024 * 1024 * 100) // 100 MB
@@ -44,6 +44,7 @@ public class RetrieveChoices extends HttpServlet {
 			request.setAttribute("file1", uploadedFile);
 			request.setAttribute("file2", local_fileName);
 
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<LINK REL="stylesheet" TYPE="text/css" HREF="webapp/css/Style.css">
+<LINK REL="stylesheet" TYPE="text/css" HREF="/Style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 
 <title> File Merge Initial Page </title>
@@ -22,7 +22,6 @@
 	<% LinkedList<String> fileNames = Util.getAvailableFiles(); %>
 	<% ListIterator<String> listIterator = fileNames.listIterator(); %>
 	<% String filename1; %>
-	<% String filename2; %>
 	
 
 	<form action="${pageContext.request.contextPath}/RetrieveChoices" method="post" enctype="multipart/form-data">
@@ -41,7 +40,10 @@
 		<br><br><input type="submit">
 
 	</form>
+	
+
 <%-- Submit Button for File Chosen ---> Confirm the file with the user --%>
+
 
 <script> 
 </script>
