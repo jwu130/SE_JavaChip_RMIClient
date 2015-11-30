@@ -8,7 +8,7 @@ public class ValidationUtil {
 	private static final String IP_PATTERN = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$";
 	private static final int SOCKETMAX = 65535;
 	private static final int SOCKETMIN = 1;
-	private static final String FILENAME_PATTERN = "^[^*&%\\/\\s]+$";
+	private static final String FILENAME_PATTERN = "^[^*&%\\/\\s]+\\.txt$";
 	private static final String FILECONTENTS_PATTERN = "^\\s*[0-9\\s]*\\s*$";
 	
 	public static boolean validIP(String ip){

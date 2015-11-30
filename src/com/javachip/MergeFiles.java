@@ -59,7 +59,7 @@ public class MergeFiles extends HttpServlet {
 
 					fileMerge.saveAndMerge(mergeFileName);
 
-					Util.setRequestAttr(request, file1, "mergedFile", mergeFileName);
+					Util.setRequestAttr(request, mergeFileName, "mergedFile", "mergedFileName");
 				}
 
 				getServletConfig().getServletContext().getRequestDispatcher("/MergeComplete.jsp").forward(request,
@@ -79,7 +79,7 @@ public class MergeFiles extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		
 	}
 
 }

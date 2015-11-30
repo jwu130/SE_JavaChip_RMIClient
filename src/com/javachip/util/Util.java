@@ -102,7 +102,7 @@ public class Util {
 		bufferedReader.close();
 
 		request.setAttribute(attributeName, fileContent);
-		request.setAttribute(fileNameAttribute, fileContent);
+		request.setAttribute(fileNameAttribute, local_fileName);
 	}
 
 	// For testing
