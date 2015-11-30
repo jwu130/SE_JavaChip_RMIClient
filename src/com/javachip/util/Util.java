@@ -25,7 +25,7 @@ public class Util {
 		client_socket_port = MainServlet.client_socket_port;
 		// IP address of the rmi server
 		AsteriskJava_IP = MainServlet.AsteriskJava_IP;
-		
+
 		LinkedList<String> filesAvailable = null;
 
 		if (client_socket_port != 0 || AsteriskJava_IP != null) {
@@ -35,16 +35,16 @@ public class Util {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			
+
 			String serviceName = "retrieve_available_files";
 			// Name of file on server side to be read from
 			String remote_AsteriskSrcFilename = "dummyName";
 			// Name of file on client side to be written to
 			String local_fileName = "dummyFileName"; // Not needed
-			
+
 			demo_instance.initialize(local_fileName, client_socket_port, AsteriskJava_IP, serviceName,
 					remote_AsteriskSrcFilename);
-			
+
 			filesAvailable = demo_instance.availableFiles;
 
 			System.out.println("This is the linked list");
@@ -52,60 +52,61 @@ public class Util {
 			while (it.hasNext()) {
 				System.out.println(it.next());
 			}
-			
+
 		} else {
 			System.out.println("Client Socket Port and Server IP is not available");
 		}
-		
+
 		return filesAvailable;
 	}
-	
+
 	// public void deleteFile(File dir, String fileName)
-	public static void deleteFile(String fileName){
-		
+	public static void deleteFile(String fileName) {
+
 		File file = new File(fileName);
-		if( file.exists()) {
+		if (file.exists()) {
 			file.delete();
 		}
 
 	}
-	
+
 	// Set the string contents of the file as a attribute in the request
-	public static void setRequestAttr(HttpServletRequest request, String local_fileName, String attributeName, String fileNameAttribute) {
+	public static void setRequestAttr(HttpServletRequest request, String local_fileName, String attributeName,
+			String fileNameAttribute) throws Exception {
 		// This will read the file one line at a time
 		String line = null;
 		String fileContent = "";
 
-		try {
-			local_fileName = local_fileName.replace("\"", "");
+		local_fileName = local_fileName.replace("\"", "");
 
-			File file = new File(local_fileName);
+		File file = new File(local_fileName);
 
-			System.out.println("File is found here: " + file.getAbsolutePath());
+		System.out.println("File is found here: " + file.getAbsolutePath());
 
-			// FileReader reads text files in the default encoding.
-			FileReader fileReader = new FileReader(file);
-			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+		// FileReader reads text files in the default encoding.
+		FileReader fileReader = new FileReader(file);
+		// Always wrap FileReader in BufferedReader.
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-			while ((line = bufferedReader.readLine()) != null) {
-				System.out.println(line);
-				fileContent += line + "<br>";
+		while ((line = bufferedReader.readLine()) != null) {
+			if (!ValidationUtil.validFileContents(line)) {
+				bufferedReader.close();
+				throw new Exception("File contents not valid");
 			}
-
-			System.out.println(fileContent);
-
-			bufferedReader.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(line);
+			fileContent += line + "<br>";
 		}
+
+		System.out.println(fileContent);
+
+		bufferedReader.close();
 
 		request.setAttribute(attributeName, fileContent);
 		request.setAttribute(fileNameAttribute, fileContent);
 	}
-	
+
 	// For testing
-	public static void main(String args []) {
+	public static void main(String args[]) {
 		client_socket_port = 7000;
 		AsteriskJava_IP = "192.168.1.2";
 		LinkedList linked = getAvailableFiles();

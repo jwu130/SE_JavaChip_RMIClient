@@ -2,6 +2,7 @@ package com.javachip;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,6 +14,7 @@ import javax.servlet.http.Part;
 
 import com.javachip.rmi.RMI_Main;
 import com.javachip.util.Util;
+import com.javachip.util.ValidationUtil;
 
 /**
  * Servlet implementation class saveUpload Requires a upload file and a
@@ -31,30 +33,41 @@ public class RetrieveChoices extends HttpServlet {
 	String serviceName = "RPC_FileRead";
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		// Set response content type to be html
+		response.setContentType("text/html");
+
+		// Return to the browser this..
+		PrintWriter out = response.getWriter();
 
 		try {
-			// Set response content type to be html
-			response.setContentType("text/html");
-			
+
 			String uploadedFile = saveUpload(request, response);
-			
-			String local_fileName = saveFileFromServer(request, response);
-			
-			request.setAttribute("file1", uploadedFile);
-			request.setAttribute("file2", local_fileName);
 
-			
+			String local_fileName = saveFileFromServer(request, response);
+
+			if (uploadedFile == null || local_fileName == null) {
+				System.out.println("File name is null");
+				out.println("<h1> Server Error </h1>");
+				return;
+			} else {
+				request.setAttribute("file1", uploadedFile);
+				request.setAttribute("file2", local_fileName);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try {
-			getServletConfig().getServletContext().getRequestDispatcher("/ViewBothFiles.jsp").forward(request, response);
+			getServletConfig().getServletContext().getRequestDispatcher("/ViewBothFiles.jsp").forward(request,
+					response);
 		} catch (Exception e) {
 			e.printStackTrace();
+			out.println("<h1> Hello. The server could not get the page you requested. </h1>");
 		}
-		
+
 	}
 
 	public String saveUpload(HttpServletRequest request, HttpServletResponse response)
@@ -72,17 +85,25 @@ public class RetrieveChoices extends HttpServlet {
 		// Get all the parts from request and write it to the file on server
 		for (Part part : request.getParts()) {
 			fileName = getFileName(part);
-			if (fileName != "")
-				part.write(uploadFilePath + File.separator + fileName);
+			if (fileName != "") {
+				if (!ValidationUtil.validFileName(fileName))
+					return null;
+				else {
+					part.write(uploadFilePath + File.separator + fileName);
+					break;
+				}
+			}
 		}
 
-		Util.setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
-
 		try {
+			Util.setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
+
 			String srcFile = uploadFilePath + File.separator + fileName;
 			System.out.println("This is the file location: " + srcFile);
+
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 
 		return fileName;
@@ -119,10 +140,11 @@ public class RetrieveChoices extends HttpServlet {
 
 			if (!demo_instance.getFinished())
 				throw new Exception("Failed to get the file from server");
-			else
+			else {
 				Util.setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
 
-			return local_fileName;
+				return local_fileName;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

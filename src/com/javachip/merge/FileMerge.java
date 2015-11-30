@@ -36,9 +36,11 @@ public class FileMerge {
 
 		try {
 			while ((inline = br.readLine()) != null) {
-				num = Integer.parseInt(inline.trim());
-				count++;
-				file1Set.add(num);
+				if (!inline.equals("")) {
+					num = Integer.parseInt(inline.trim());
+					count++;
+					file1Set.add(num);
+				}
 			}
 			while ((inline = br2.readLine()) != null) {
 				count++;
@@ -92,28 +94,27 @@ public class FileMerge {
 		for (int i = 0; i < results.length; i++) {
 			pw.println(results[i]);
 		}
-		
+
 		pw.close();
 	}
 
 	public void addToResult(LinkedList l) {
-		
-		if(l!=null){
-		
-		Iterator i = l.iterator();
-		try {
-			while (i.hasNext()) {
-				results[resultsLast] = (int) i.next();
-				resultsLast++;
+
+		if (l != null) {
+
+			Iterator i = l.iterator();
+			try {
+				while (i.hasNext()) {
+					results[resultsLast] = (int) i.next();
+					resultsLast++;
+				}
+			} catch (Exception e) {
+				System.out.println("addToResult failled");
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			System.out.println("addToResult failled");
-			e.printStackTrace();
-		}
-		
-		}
-		else{
-			
+
+		} else {
+
 		}
 	}
 
@@ -159,7 +160,6 @@ public class FileMerge {
 				temp[++point] = hi;
 			}
 
-			// System.out.println("wdkw");
 		} // while
 	}
 
