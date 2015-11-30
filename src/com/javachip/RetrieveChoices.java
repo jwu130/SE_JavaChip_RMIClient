@@ -15,8 +15,8 @@ import com.javachip.rmi.RMI_Main;
 import com.javachip.util.Util;
 
 /**
- * Servlet implementation class saveUpload 
- * Requires a upload file and a "fileName" to retrieve from rmi server
+ * Servlet implementation class saveUpload Requires a upload file and a
+ * "fileName" to retrieve from rmi server
  */
 
 @WebServlet("/RetrieveChoices/*")
@@ -37,11 +37,12 @@ public class RetrieveChoices extends HttpServlet {
 			// Set response content type to be html
 			response.setContentType("text/html");
 			
-			String uploadedFile = "";
-			saveUpload(request, response, uploadedFile);
+			String uploadedFile = saveUpload(request, response);
 			
-			String local_fileName = "";
-			saveFileFromServer(request, response, local_fileName);
+			String local_fileName = saveFileFromServer(request, response);
+			
+			request.setAttribute("file1", uploadedFile);
+			request.setAttribute("file2", local_fileName);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,7 +56,7 @@ public class RetrieveChoices extends HttpServlet {
 		
 	}
 
-	public void saveUpload(HttpServletRequest request, HttpServletResponse response, String uploadedFile)
+	public String saveUpload(HttpServletRequest request, HttpServletResponse response)
 			throws IllegalStateException, IOException, ServletException {
 		String uploadFilePath = System.getProperty("user.dir");
 
@@ -73,17 +74,17 @@ public class RetrieveChoices extends HttpServlet {
 			if (fileName != "")
 				part.write(uploadFilePath + File.separator + fileName);
 		}
-		
-		uploadedFile = fileName;
-	
+
 		Util.setRequestAttr(request, fileName, "fileUploaded", "fileUploadedName");
-		
+
 		try {
 			String srcFile = uploadFilePath + File.separator + fileName;
 			System.out.println("This is the file location: " + srcFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return fileName;
 	}
 
 	/**
@@ -101,9 +102,9 @@ public class RetrieveChoices extends HttpServlet {
 		return "";
 	}
 
-	public void saveFileFromServer(HttpServletRequest request, HttpServletResponse response, String local_fileName) {
+	public String saveFileFromServer(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			local_fileName = (String) request.getParameter("fileName").replace("\"", "");
+			String local_fileName = (String) request.getParameter("fileName").replace("\"", "");
 
 			// Client side server socket port to be started on
 			int client_socket_port = MainServlet.client_socket_port;
@@ -120,9 +121,11 @@ public class RetrieveChoices extends HttpServlet {
 			else
 				Util.setRequestAttr(request, local_fileName, "fileFromServer", "fileFromServerName");
 
+			return local_fileName;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }
