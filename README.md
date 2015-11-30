@@ -3,7 +3,6 @@ JavaChip's Assignment 2 and 3 for CS 370 Software Engineering.
 
 ReadMe - Basics
 
-*Replace the brackets and the contents of the elements here that are represented in this doc by "< >" with your own paths
 *You must create two separate directories one for client, the other for the server side.
 
 Requirements:
