@@ -12,17 +12,18 @@
 </head>
 
 <body>
+<center>
 	<h1>Merge Complete</h1>
 	<p>MERGED FILE RIGHT HERE</p>
 
-	<div id="centerbox"><%=request.getAttribute("mergedFile")%>
+	<div id="centerbox2"><%=request.getAttribute("mergedFile")%>
 		<br> <br>
 		<%
 			String file_name = (String) request.getAttribute("mergedFileName");
 		%>
 	</div>
 	<!-- Send "merge" as "download" when download button is clicked -->
-	<center>
+
 		<form method="post"
 			action="${pageContext.request.contextPath}/MergeFiles/">
 			<input type="hidden" name="mergedFileName" value="<%=file_name%>" />

@@ -116,22 +116,12 @@ public class RetrieveChoices extends HttpServlet {
 		String contentDisp = part.getHeader("content-disposition");
 		System.out.println("content-disposition header= " + contentDisp);
 		String[] tokens = contentDisp.split(";");
-		String result = "";
-		
 		for (String token : tokens) {
 			if (token.trim().startsWith("filename")) {
-				result = token.substring(token.indexOf("=") + 2, token.length() - 1);
-				break;
+				return token.substring(token.indexOf("=") + 2, token.length() - 1);
 			}
 		}
-		if (result != null && result.contains("\\")) {
-			String[] array = result.split("\\\\");
-			System.out.println(array[(array.length - 1)]);
-			result = array[(array.length - 1)];
-		}
-		
-		return result;
-
+		return "";
 	}
 
 	public String saveFileFromServer(HttpServletRequest request, HttpServletResponse response) {
