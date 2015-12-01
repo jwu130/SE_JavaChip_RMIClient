@@ -28,7 +28,7 @@ function ConfirmDialog(){
 			<option value=false>false </option>
 			<option value=true>true</option>
 		</select>
-		<input type = "submit">
+		<input type = "submit" name="merge" value="submit" >
 </form>
 
 </body>

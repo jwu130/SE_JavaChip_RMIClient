@@ -1,7 +1,9 @@
 package com.javachip;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 
@@ -78,8 +80,39 @@ public class MergeFiles extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
+
+		if (request.getParameter("merge") != null) {
+			if (request.getParameter("merge").equals("download")) {
+				
+				String fileName = (String) request.getParameter("mergedFileName");
+				OutputStream out = response.getOutputStream();
+				System.out.println(fileName);
+				FileInputStream in = new FileInputStream(fileName);
+				byte[] buffer = new byte[4096];
+				int length;
+				while ((length = in.read(buffer)) > 0) {
+					out.write(buffer, 0, length);
+				}
+				in.close();
+				out.flush();
+				
+//				try {
+//					Util.setRequestAttr(request, fileName, "mergedFile", "mergedFileName");
+//					getServletConfig().getServletContext().getRequestDispatcher("/MergeComplete.jsp").forward(request,
+//							response);
+//				} catch (Exception e) {
+//					// Set response content type to be html
+//					response.setContentType("text/html");
+//					// Return to the browser this..
+//					PrintWriter outp = response.getWriter();
+//					e.printStackTrace();
+//					outp.println("<h1> Server Error </h1>");
+//				}
+				
+			} else if (request.getParameter("merge").equals("submit")) {
+				doGet(request, response);
+			}
+		}
 	}
 
 }
