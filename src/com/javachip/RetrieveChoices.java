@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.swing.JOptionPane;
 
 import com.javachip.rmi.RMI_Main;
 import com.javachip.util.Util;
@@ -48,9 +49,11 @@ public class RetrieveChoices extends HttpServlet {
 			String local_fileName = saveFileFromServer(request, response);
 
 			if (uploadedFile == null || local_fileName == null) {
-				System.out.println("File name is null");
-				out.println("<h1> Server Error </h1>");
-				return;
+				//System.out.println("File name is null");
+				//out.println("<h1> Server Error </h1>");
+				JOptionPane.showMessageDialog(null, "You MUST select a file!");
+				getServletConfig().getServletContext().getRequestDispatcher("/MainPage.jsp").forward(request,
+						response);
 			} else {
 				request.setAttribute("file1", uploadedFile);
 				request.setAttribute("file2", local_fileName);
