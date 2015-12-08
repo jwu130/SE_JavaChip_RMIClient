@@ -49,11 +49,12 @@ public class RetrieveChoices extends HttpServlet {
 			String local_fileName = saveFileFromServer(request, response);
 
 			if (uploadedFile == null || local_fileName == null) {
-				//System.out.println("File name is null");
-				//out.println("<h1> Server Error </h1>");
+//				System.out.println("File name is null");
+//				out.println("<h1> Server Error </h1>");
 				JOptionPane.showMessageDialog(null, "You MUST select a file!");
 				getServletConfig().getServletContext().getRequestDispatcher("/MainPage.jsp").forward(request,
 						response);
+				return;
 			} else {
 				request.setAttribute("file1", uploadedFile);
 				request.setAttribute("file2", local_fileName);
@@ -119,12 +120,22 @@ public class RetrieveChoices extends HttpServlet {
 		String contentDisp = part.getHeader("content-disposition");
 		System.out.println("content-disposition header= " + contentDisp);
 		String[] tokens = contentDisp.split(";");
+		String result = "";
+		
 		for (String token : tokens) {
 			if (token.trim().startsWith("filename")) {
-				return token.substring(token.indexOf("=") + 2, token.length() - 1);
+				result = token.substring(token.indexOf("=") + 2, token.length() - 1);
+				break;
 			}
 		}
-		return "";
+		if (result != null && result.contains("\\")) {
+			String[] array = result.split("\\\\");
+			System.out.println(array[(array.length - 1)]);
+			result = array[(array.length - 1)];
+		}
+		
+		return result;
+
 	}
 
 	public String saveFileFromServer(HttpServletRequest request, HttpServletResponse response) {

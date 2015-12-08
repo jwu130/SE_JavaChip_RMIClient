@@ -83,11 +83,17 @@ public class MergeFiles extends HttpServlet {
 
 		if (request.getParameter("merge") != null) {
 			if (request.getParameter("merge").equals("download")) {
-				
+
 				String fileName = (String) request.getParameter("mergedFileName");
-				OutputStream out = response.getOutputStream();
 				System.out.println(fileName);
 				FileInputStream in = new FileInputStream(fileName);
+				
+				response.setContentType("application/force-download");
+				response.setContentLength((int)new File(fileName).length());
+				response.setHeader("Content-Transfer-Encoding", "binary");
+				response.setHeader("Content-Disposition","attachment; filename=\"" + fileName + "\"");
+		
+				OutputStream out = response.getOutputStream();
 				byte[] buffer = new byte[4096];
 				int length;
 				while ((length = in.read(buffer)) > 0) {
