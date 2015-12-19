@@ -1,5 +1,6 @@
 # SE_JavaChip_RMIClient
-JavaChip's Assignment 2 and 3 for CS 370 Software Engineering.  
+JavaChip's Assignment 2 and 3 for CS 370 Software Engineering. 
+by Zahra Sidiqi, Ja-Ying Teresa Wu, and Anonymous
 
 ReadMe - Basics
 
@@ -19,6 +20,6 @@ Server-Side:
 
 Client-Side:
     Create tomcat server and deploy client application  (src files from https://github.com/jwu130/SE_JavaChip_RMIClient)
-        The main servlet will take two parameters upon initialization:
+        The main servlet will take two parameters from the console upon initialization:
             1. The port that the RMI client is allowed to listen on
             2. The IP address of the machine that the RMI server is running on
